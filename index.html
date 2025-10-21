@@ -129,13 +129,20 @@ function playRandomVideo(){
   playVideo(randomIndex);
 }
 
-function playVideo(i){
-  home.style.display='none';
-  player.style.display='block';
+function playVideo(i) {
+  home.style.display = 'none';
+  player.style.display = 'block';
   player.style.opacity = 0;
+
   player.src = videos[i];
-  player.play();
-  setTimeout(()=>{ player.style.opacity = 1; }, 50);
+
+  // Wait until enough data is buffered
+  player.oncanplay = () => {
+    player.play();
+    requestAnimationFrame(() => {   // slight async so frame applies
+      player.style.opacity = 1;      // fade in now
+    });
+  };
 }
 
 function goHome(){
